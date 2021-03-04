@@ -185,10 +185,48 @@ INSERT INTO poke_team(id_pokenti) VALUES
 	(15),
 	(18);
 
+CREATE TABLE team_stats (
+	id_current_stat INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	team_level INT NOT NULL,
+	team_exp INT NOT NULL,
+	team_hp INT NOT NULL,
+	team_attack INT NOT NULL,
+	team_defense INT NOT NULL,
+	team_x_atk INT NOT NULL,
+	team_x_def INT NOT NULL,
+	team_speed INT NOT NULL,
+	team_accuracy INT NOT NULL,	
+	id_pokenti INT UNSIGNED NOT NULL,
+	FOREIGN KEY (id_pokenti) REFERENCES pokentis(id_pokenti) 
+);
+
+INSERT INTO team_stats (team_level, team_exp, team_hp, team_attack, team_defense, team_x_atk, team_x_def, team_speed, team_accuracy, id_pokenti) VALUES
+	(8, 34, 41, 42, 65, 15, 15, 44,31, 1),
+	(22, 33, 6, 43, 80, 8, 6, 45, 31, 2),
+	(13, 44, 68, 56, 10, 10, 38, 11, 55, 3),
+	(14, 14, 62, 32, 60, 35, 45, 12, 39, 4),
+	(24, 75, 13, 18, 8, 25, 18, 45,  11, 5),
+	(94, 88, 45, 42, 65, 45, 65, 66, 31, 6),
+	(7, 23, 31, 35, 50, 6, 43, 45, 24, 7),
+	(31, 28, 3, 20, 35, 10, 58, 47, 14, 8),
+	(53, 71, 11, 60, 5, 15, 78, 49, 20, 9),
+	(12, 21, 70, 31, 10, 20, 45, 11 ,15, 10),
+	(27, 30, 140, 45, 55, 25, 30, 15, 50, 11),
+	(55, 76, 15, 40, 14, 30, 70, 33, 45, 12),
+	(12, 20, 25, 20, 24, 20, 50, 11, 19, 13),
+	(26, 47, 15, 12, 15, 2, 35, 33, 45, 14),
+	(77, 404, 110, 14, 40, 40, 55, 75, 15, 15),
+	(6, 42, 15, 40, 32, 32, 53, 44, 25, 16),
+	(10, 10, 220, 155, 44, 41, 31, 88, 39, 17),
+	(77, 189, 50, 75, 17, 14, 10, 90, 79, 18),
+	(4, 34, 6, 5, 2, 5, 2,  3, 19),
+	(54, 1, 11, 60, 15, 40, 9, 110, 41, 20);
+
 CREATE TABLE poke_pc (
 	id_pc INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	id_pokenti INT UNSIGNED NOT NULL,
-	FOREIGN KEY (id_pokenti) REFERENCES pokentis(id_pokenti) );
+	FOREIGN KEY (id_pokenti) REFERENCES pokentis(id_pokenti) 
+);
 
 INSERT INTO poke_pc (id_pokenti) VALUES
 	(3),
@@ -196,6 +234,90 @@ INSERT INTO poke_pc (id_pokenti) VALUES
 	(19),
 	(12);
 
+CREATE TABLE pc_stats (
+	id_pc_stats INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	hp INT NOT NULL,
+	attack INT NOT NULL,
+	defense INT NOT NULL,
+	x_atk INT NOT NULL,
+	x_def INT NOT NULL,
+	speed INT NOT NULL,
+	accuracy INT NOT NULL,
+	xp INT NOT NULL,
+	id_pokenti INT UNSIGNED NOT NULL,
+	FOREIGN KEY (id_pokenti) REFERENCES pokentis(id_pokenti)
+);
 
+INSERT INTO pc_stats (hp, attack, defense, x_atk, x_def, speed, accuracy, xp, id_pokenti) VALUES
+	(40, 50, 40, 40, 40, 90, 20, 318, 1),
+	(65, 65, 65, 50, 50, 90, 25, 385, 2),
+	(90, 95, 95, 70, 90, 70, 30, 510, 3),
+	(25, 20, 15, 105, 55, 90, 88, 309, 4),
+	(40, 35, 30, 120, 70, 105, 90, 400, 5),
+	(55, 50, 45, 135, 95, 120, 99, 500, 6),
+	(70, 80, 50, 35, 35, 35, 40 ,305, 7),
+	(80, 100, 70, 50, 60, 45, 55, 405, 8),
+	(90, 130, 80, 65, 85, 55, 55, 505, 9),
+	(50, 75, 35, 70, 30, 40, 20, 300, 10),
+	(65, 90, 50, 85, 45, 55, 35, 390, 11),
+	(80, 105, 65, 100, 70, 70, 53, 490, 12),
+	(40, 80, 100, 30, 30, 20, 14, 300, 13),
+	(55, 95, 115, 45, 45, 35, 22, 390, 14),
+	(80, 120, 130, 55, 65, 45, 60, 495, 15),
+	(41, 64, 45, 50, 50, 50, 42 , 300, 16),
+	(61, 84, 65, 70, 70, 71, 64 , 420, 17),
+	(91, 134, 95, 100, 100, 80, 84, 600, 18),
+	(20, 10, 55, 15, 20, 80, 1 ,200, 19),
+	(95, 125, 79, 60, 100, 81, 100 ,540, 20);
 
+/*Procedures for management*/
 
+DROP PROCEDURE IF EXISTS caughtPokenti;
+
+DELIMITER //
+
+CREATE PROCEDURE caughtPokenti (IN in_id_pokenti INT UNSIGNED) 
+
+BEGIN
+
+	INSERT INTO poke_team (id_pokenti) VALUES ( 
+		in_id_pokenti );
+	DELETE FROM poke_pc  WHERE id_pokenti=in_id_pokenti LIMIT 1;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS storePokenti;
+
+DELIMITER //
+
+CREATE PROCEDURE storePokenti (
+	IN in_id_pokenti INT UNSIGNED )
+BEGIN 
+INSERT INTO poke_pc (id_pokenti) VALUES (
+	in_id_pokenti);
+
+DELETE FROM poke_team WHERE id_pokenti=in_id_pokenti LIMIT 1;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS heal;
+
+DELIMITER //
+
+CREATE PROCEDURE healWound (
+	IN in_healing INT,
+	IN in_pokenti INT UNSIGNED )
+BEGIN 
+
+SELECT hp INTO @hp FROM pc_stats WHERE id_pokenti=in_pokenti;
+SELECT curr_hp INTO @team_hp FROM team_stats WHERE id_pokenti=in_pokenti;
+
+IF @curr_hp+in_healing> @hp THEN
+	UPDATE team_stats SET curr_hp=@hp WHERE id_pokenti=in_pokenti;
+ELSE
+	UPDATE team_stats SET curr_hp=@curr_hp+in_healing WHERE id_pokenti=in_pokenti;
+END IF;
+
+END //
+
+DELIMITER ;
